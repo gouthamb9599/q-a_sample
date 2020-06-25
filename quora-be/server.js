@@ -1,13 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const db = require('./config/database')
-const route = require('./routes/index.js')
+// const db = require('./config/database')
+const client = require('./config/database')
 const app = express();
 const port = process.env.PORT || 5000;
+const Route = require('./route/approute');
+// const port = process.env.PORT || 5000;
 class Server {
     constructor() {
         this.initserver();
-        route(app);
+        Route(app);
     }
     initserver() {
         app.use(bodyParser.json());

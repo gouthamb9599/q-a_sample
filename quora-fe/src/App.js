@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/login';
+import Signup from './pages/signup';
 import Homepage from './pages/homepage'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
@@ -14,6 +15,7 @@ function App() {
           <Switch>
             <Route exact path='/' component={Login} ></Route>
             <Route path='/home' component={Homepage} ></Route>
+            <Route path='/signup' component={Signup}></Route>
           </Switch>
         </div>
       </Router>
