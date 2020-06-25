@@ -9,27 +9,27 @@ const route = app => {
             (err, results) => {
                 if (err) console.log(err);
                 else {
-                    console.log(results);
+                    // console.log(results);
                     if (results.rowCount === 1) {
                         let token = jwt.sign({ data: google, exp: Math.floor(Date.now() / 100) + 600 * 600 },
                             "secret"
                         );
-                        console.log(token)
-                        res.send({ success: true, token, Name: google.Name });
+                        // console.log(token)
+                        res.send({ success: true, token, Name: google.Name, id: results.rows[0].id });
                     }
                     else {
-                        client.query(`insert into details(name,email,providername,image,token,password) values($1,$2,$3,$4,$5,$6) RETURNING *`,
+                        client.query(`insert into details(name,email,providername,image,token,password) values($1,$2,$3,$4,$5,$6) RETURNING id`,
                             [google.Name, google.email, google.ProviderId, google.Image, google.token, password],
                             (err, results) => {
                                 if (err) console.log(err);
                                 else {
                                     console.log("user data entered successfully through google ID");
-                                    console.log(results)
+                                    // console.log(results)
                                     let token = jwt.sign({ data: google, exp: Math.floor(Date.now() / 100) + 600 * 600 },
                                         "secret"
                                     );
-                                    console.log(token)
-                                    res.send({ success: true, token, Name: google.Name });
+                                    // console.log(token)
+                                    res.send({ success: true, token, Name: google.Name, id: results.rows[0].id });
                                 }
 
                             });
@@ -45,11 +45,11 @@ const route = app => {
                 if (err) console.log(err);
                 else {
                     console.log('access successful')
-                    console.log(results.rows[0])
+                    // console.log(results.rows[0])
                     let token = jwt.sign({ data: results.rows[0], exp: Math.floor(Date.now() / 100) + 600 * 600 },
                         "secret")
-                    console.log(token);
-                    res.send({ success: true, token, Name: results.rows[0].name })
+                    // console.log(token);
+                    res.send({ success: true, token, Name: results.rows[0].name, id: results.rows[0].id })
                 }
 
             })
@@ -65,6 +65,29 @@ const route = app => {
                 }
             })
 
+    })
+    app.get("/gettags", (req, res) => {
+        client.query('select * from tags', (err, results) => {
+            if (err) console.log(err);
+            else {
+                console.log(results.rows);
+                res.send({ success: true, data: results.rows })
+            }
+        })
+    })
+    app.post('/addquestion', (req, res) => {
+        console.log(req.body);
+        const questiondata = req.body;
+        client.query(`insert into questions(question_heading,question_desc,user_id,tag_id) values($1,$2,$3,$4)`,
+            [questiondata.questionheading, questiondata.questiondesc, questiondata.userid, questiondata.tag],
+            (err, results) => {
+                if (err) console.log(err);
+                else {
+                    if (results.rowCount !== 0) {
+                        res.send({ success: true })
+                    }
+                }
+            })
     })
 };
 module.exports = route;
