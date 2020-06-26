@@ -12,6 +12,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import Divider from '@material-ui/core/Divider';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import Questionlist from '../components/questionlist';
+// import { BrowserRouter as Router, Switch, Route, Link, withRouter } from 'react-router-dom';
 import Axios from 'axios';
 export class Homepage extends Component {
     constructor(props) {
@@ -21,6 +22,7 @@ export class Homepage extends Component {
             tagsearch: '',
             Taglist: [],
             search: false,
+            searchdisplay: false,
             disabledup: false,
             question: [],
             upvote: [],
@@ -67,7 +69,13 @@ export class Homepage extends Component {
         Axios.get(`http://localhost:5000/getquestionstag?tagid=${data}`)
             .then(res => {
                 console.log(res);
+                var questionset = [];
+                questionset = res.data.data
+                this.setState({
+                    question: questionset
+                })
             })
+
         this.setState({
             search: false
         })
@@ -76,6 +84,10 @@ export class Homepage extends Component {
     handleChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     };
+    logout = () => {
+        sessionStorage.removeItem("userData");
+        this.props.history.push('/');
+    }
     render() {
         return (
             <div className="container">
@@ -89,6 +101,8 @@ export class Homepage extends Component {
                     <Button variant="contained" onClick={e => this.open()} color="primary" >
                         Add Question
           </Button >
+                    <Button variant="contained" onClick={e => this.logout()} color="primary">Logout</Button>
+
 
                 </div>
                 {this.state.questionmodel ? <Question /> : <></>}
@@ -99,9 +113,21 @@ export class Homepage extends Component {
                         <SearchTwoToneIcon />
                     </Button >
                     <div className="which">
-                        {this.state.question.map((data) => (
+                        {this.state.searchdisplay ?
+                            <div>
+                                {this.state.question.map((data) =>
+                                    (<Questionlist
+                                        id={data.question_id}
+                                        head={data.question_heading}
+                                        desc={data.question_desc}
+                                        upvote={data.upvote}
+                                        answer={data.answer_count}
+                                        comment={data.comment_count}></Questionlist>))}
+                            </div> : <></>}
+                        <div className="question-tab">{this.state.question.map((data) => (
                             <Questionlist id={data.question_id} head={data.question_heading} desc={data.question_desc} upvote={data.upvote} answer={data.answer_count} comment={data.comment_count}></Questionlist>
                         ))}
+                        </div>
                     </div>
                     <div className="set">
                         {this.state.search ?

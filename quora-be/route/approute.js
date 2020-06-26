@@ -100,7 +100,7 @@ const route = app => {
             })
     })
     app.get('/getquestions', (req, res) => {
-        client.query(`select * from questions`, (err, results) => {
+        client.query(`select * from questions order by upvote desc`, (err, results) => {
             if (err) console.log(err);
             else {
                 if (results.rowCount !== 0) {
@@ -141,6 +141,14 @@ const route = app => {
                 else {
                     if (results.rowCount !== 0) {
                         res.send({ success: true })
+                        client.query(`select count(*) from question_comments where question_id=${data.questionid} `,
+                            (err, result) => {
+                                if (err) console.log(err);
+                                else {
+                                    console.log(result.rows[0].count)
+                                    client.query(`update questions set comment_count=${result.rows[0].count} where question_id=${data.questionid}`)
+                                }
+                            })
                     }
                 }
 
@@ -155,6 +163,14 @@ const route = app => {
                 else {
                     if (results.rowCount !== 0) {
                         res.send({ success: true })
+                        client.query(`select count(*) from answers where question_id=${data.questionid} `,
+                            (err, result) => {
+                                if (err) console.log(err);
+                                else {
+                                    console.log(result.rows[0].count)
+                                    client.query(`update questions set answer_count=${result.rows[0].count} where question_id=${data.questionid}`)
+                                }
+                            })
                     }
                 }
             })
@@ -173,12 +189,24 @@ const route = app => {
     })
     app.get('/getanswer', (req, res) => {
         const id = req.query.id;
-        client.query(`select * from answers where question_id=${id}`, (err, results) => {
+        client.query(`select * from answers where question_id=${id} order by upvote desc`, (err, results) => {
             if (err) console.log(err);
             else {
                 if (results.rowCount !== 0) {
                     console.log(results.rows);
                     res.send({ success: true, data: results.rows })
+                }
+            }
+        })
+    })
+    app.post('/upvoteans', (req, res) => {
+        const upvote = req.body.upvote;
+        const id = req.body.id
+        client.query(`update answers set upvote=$1 where answer_id=$2  RETURNING upvote`, [upvote, id], (err, results) => {
+            if (err) console.log(err);
+            else {
+                if (results.rowCount !== 0) {
+                    res.send({ success: true, data: results.rows[0] })
                 }
             }
         })

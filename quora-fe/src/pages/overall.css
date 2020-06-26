@@ -15,6 +15,10 @@
       box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
       transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   }
+  
+.answerdisplay{
+    display: inline-flex;
+}
   .form-alignments{
     height: 15px;
     margin-top: 5px;
@@ -43,8 +47,16 @@
     border: 1px solid rgba(46, 91, 255, 0.08);
    
   }
+.question-tab{
+    padding: 10px 10px;
+}
   .tagdisplay{
     width: 295px;
+    z-index: 1000;
+    position: fixed;
+    background-color: silver;
+    top: 180px;
+    right: 250px;
     margin-left: 185px;
       box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
       transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
@@ -64,7 +76,9 @@
     margin-top: 0px;
     margin-bottom: 0px;
     height: 86px;
-  }.questionset{
+  }
+  .questionset{
+      padding: 10px 10px;
       display: flex;
   }
   .questionhead{
