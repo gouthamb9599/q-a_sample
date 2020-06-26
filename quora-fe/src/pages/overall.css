@@ -33,6 +33,50 @@
       box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
       transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   }
+  .setbuttonsize{
+      padding-top: 12px;
+      padding-bottom: 12px;
+  }
+  .which{
+    height: 163px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    border: 1px solid rgba(46, 91, 255, 0.08);
+   
+  }
+  .tagdisplay{
+    width: 295px;
+    margin-left: 185px;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+      transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  }
+  .headbar{
+    color: #fff;
+    background-color: #3f51b5;
+  }
+  .qdesc{
+      width:270px;
+  }
+  .upvotesize{
+      width: 20px;
+      height: 33px;
+  }
+  .questiondesc{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 86px;
+  }.questionset{
+      display: flex;
+  }
+  .questionhead{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 31px;
+  }
+  textarea {
+    color: transparent;
+    text-shadow: 0px 0px 0px black;
+    border: none;
+  }
   .loginmain{
     width: 830px;
     height: 400px;

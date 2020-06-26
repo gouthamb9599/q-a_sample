@@ -75,6 +75,16 @@ const route = app => {
             }
         })
     })
+    app.get("/gettag", (req, res) => {
+        const data = req.query.tagsearch;
+        client.query(`select * from tags where name like '%${data}%'`, (err, results) => {
+            if (err) console.log(err);
+            else {
+                console.log(results.rows);
+                res.send({ success: true, data: results.rows })
+            }
+        })
+    })
     app.post('/addquestion', (req, res) => {
         console.log(req.body);
         const questiondata = req.body;
@@ -88,6 +98,28 @@ const route = app => {
                     }
                 }
             })
+    })
+    app.get('/getquestions', (req, res) => {
+        client.query(`select * from questions`, (err, results) => {
+            if (err) console.log(err);
+            else {
+                if (results.rowCount !== 0) {
+                    res.send({ success: true, data: results.rows })
+                }
+            }
+        })
+    })
+    app.get('/getquestionstag', (req, res) => {
+        const tag = req.query.tagid;
+        console.log('114', tag);
+        client.query(`select * from questions where tag_id=$1`, [tag], (err, results) => {
+            if (err) console.log(err);
+            else {
+                if (results.rowCount !== 0) {
+                    res.send({ success: true, data: results.rows })
+                }
+            }
+        })
     })
 };
 module.exports = route;
