@@ -11,6 +11,7 @@ import Question from '../components/question';
 import CommentIcon from '@material-ui/icons/Comment';
 import Divider from '@material-ui/core/Divider';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import Questionlist from '../components/questionlist';
 import Axios from 'axios';
 export class Homepage extends Component {
     constructor(props) {
@@ -20,7 +21,11 @@ export class Homepage extends Component {
             tagsearch: '',
             Taglist: [],
             search: false,
+            disabledup: false,
             question: [],
+            upvote: [],
+            comment: [],
+            answer: [],
             questionmodel: false
         };
     }
@@ -37,6 +42,7 @@ export class Homepage extends Component {
             this.setState({
                 question: questionset
             })
+            // this.countcall(this.state.question)
             console.log(this.state.question)
 
         })
@@ -66,6 +72,7 @@ export class Homepage extends Component {
             search: false
         })
     };
+
     handleChange = (e) => {
         this.setState({ [e.target.name]: e.target.value });
     };
@@ -79,7 +86,7 @@ export class Homepage extends Component {
                 <div className="col-sm-12" style={{ paddingBottom: "15px" }}>
                     <div className="col-sm-3 paddiv"> Welcome  :{this.state.name} </div>
 
-                    <Button variant="contained" onClick={e => this.open()} color="primary" autoFocus>
+                    <Button variant="contained" onClick={e => this.open()} color="primary" >
                         Add Question
           </Button >
 
@@ -93,24 +100,7 @@ export class Homepage extends Component {
                     </Button >
                     <div className="which">
                         {this.state.question.map((data) => (
-                            <div>
-                                <div className="questionset">
-                                    <label> Question:</label>
-                                    <textarea style={{ height: "31px", width: "555px" }} name="questionhead" selectTextOnFocus={false} editable={false} cols="50" rows="5" value={data.question_heading}></textarea>
-                                </div>
-                                <Divider variant="middle" />
-                                <div>
-                                    <div className="questionset" >
-                                        <label>Description:</label> <textarea style={{ height: "84px", width: "555px" }} name="questiondesc" selectTextOnFocus={false} editable={false} cols="50" rows="5" value={data.question_desc}></textarea>
-                                    </div>
-                                    <Divider variant="middle" />
-                                    <div>
-                                        <Button className="upvotesize" variant="contained" color="primary"><ExpandLessIcon></ExpandLessIcon></Button>
-                                        <Button className="upvotesize" variant="contained" color="primary"><CommentIcon /></Button>
-                                        <Button className="upvotesize" variant="contained" color="primary"><QuestionAnswerIcon /></Button>
-                                    </div>
-                                </div>
-                            </div>
+                            <Questionlist id={data.question_id} head={data.question_heading} desc={data.question_desc} upvote={data.upvote} answer={data.answer_count} comment={data.comment_count}></Questionlist>
                         ))}
                     </div>
                     <div className="set">

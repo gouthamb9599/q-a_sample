@@ -72,11 +72,7 @@
     margin-bottom: 0px;
     height: 31px;
   }
-  textarea {
-    color: transparent;
-    text-shadow: 0px 0px 0px black;
-    border: none;
-  }
+
   .loginmain{
     width: 830px;
     height: 400px;

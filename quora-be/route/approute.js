@@ -121,5 +121,67 @@ const route = app => {
             }
         })
     })
+    app.post('/upvote', (req, res) => {
+        const id = req.body.id;
+        const upvote = req.body.vote;
+        client.query(`update questions set upvote=$1 where question_id=$2  RETURNING upvote`, [upvote, id], (err, results) => {
+            if (err) console.log(err);
+            else {
+                if (results.rowCount !== 0) {
+                    res.send({ success: true, data: results.rows[0] })
+                }
+            }
+        })
+    })
+    app.post('/addcommentforQ', (req, res) => {
+        const data = req.body;
+        client.query(`insert into question_comments(comment,question_id,user_id) values($1,$2,$3) RETURNING *`, [data.comment, data.questionid, data.userid],
+            (err, results) => {
+                if (err) console.log(err);
+                else {
+                    if (results.rowCount !== 0) {
+                        res.send({ success: true })
+                    }
+                }
+
+            })
+
+    })
+    app.post('/addanswer', (req, res) => {
+        const data = req.body;
+        client.query(`insert into answers(answer,user_id,question_id) values($1,$2,$3) RETURNING *`, [data.answer, data.userid, data.questionid],
+            (err, results) => {
+                if (err) console.log(err);
+                else {
+                    if (results.rowCount !== 0) {
+                        res.send({ success: true })
+                    }
+                }
+            })
+    })
+    app.get('/getcomment', (req, res) => {
+        const id = req.query.id;
+        client.query(`select * from question_comments where question_id=${id}`, (err, results) => {
+            if (err) console.log(err);
+            else {
+                if (results.rowCount !== 0) {
+                    console.log(results.rows);
+                    res.send({ success: true, data: results.rows })
+                }
+            }
+        })
+    })
+    app.get('/getanswer', (req, res) => {
+        const id = req.query.id;
+        client.query(`select * from answers where question_id=${id}`, (err, results) => {
+            if (err) console.log(err);
+            else {
+                if (results.rowCount !== 0) {
+                    console.log(results.rows);
+                    res.send({ success: true, data: results.rows })
+                }
+            }
+        })
+    })
 };
 module.exports = route;

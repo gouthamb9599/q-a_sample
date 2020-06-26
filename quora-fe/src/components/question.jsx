@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -12,6 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import Axios from 'axios';
+
 import { MenuItem } from '@material-ui/core';
 import swal from 'sweetalert';
 
@@ -93,7 +94,7 @@ export default function Question() {
                     <textarea name="questionhead" cols="50" rows="2" onChange={handleChangehead} placeholder="Question Title"></textarea>
                     <textarea name="questiondesc" cols="50" rows="5" onChange={handleChangedesc} placeholder="Question Description"></textarea>
                     <Button className={classes.button} onClick={handleOpen}>
-                        Open the select
+                        Select Domain
       </Button>
                     <FormControl className={classes.formControl}>
                         <InputLabel id="demo-controlled-open-select-label">Tag</InputLabel>
