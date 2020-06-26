@@ -107,11 +107,13 @@ export class Homepage extends Component {
                 </div>
                 {this.state.questionmodel ? <Question /> : <></>}
                 <div className="col-sm-12">
-                    <TextField id="outlined-basic" label="Search with Tags" name="tagsearch" variant="outlined" placeholder="Search with Tags" value={this.state.tagsearch} onChange={e => this.handleChange(e)} ></TextField>
-                    <Button className="setbuttonsize" variant="contained"
-                        onClick={e => this.tags()} style={{ height: "54px" }} color="primary" >
-                        <SearchTwoToneIcon />
-                    </Button >
+                    <div className="search">
+                        <TextField id="outlined-basic" label="Search with Tags" name="tagsearch" variant="outlined" placeholder="Search with Tags" value={this.state.tagsearch} onChange={e => this.handleChange(e)} ></TextField>
+                        <Button className="setbuttonsize" variant="contained"
+                            onClick={e => this.tags()} style={{ height: "54px" }} color="primary" >
+                            <SearchTwoToneIcon />
+                        </Button >
+                    </div>
                     <div className="which">
                         {this.state.searchdisplay ?
                             <div>

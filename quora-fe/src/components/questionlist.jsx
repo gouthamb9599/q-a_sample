@@ -12,13 +12,16 @@ import '../pages/overall.css'
 export default function Questionlist(props) {
     const [Ans, setAns] = React.useState(false);
     const [Com, setCom] = React.useState(false);
+    const [Comans, setComans] = React.useState(false);
     const upvote1 = props.upvote;
     var upvote2 = 0;
     const [Upvoteques, setUpvoteques] = React.useState(false);
     const [Upvoteans, setUpvoteans] = React.useState(false);
     const [Commentarray, setCommentarray] = React.useState([]);
+    const [Commentanswerarray, setCommentanswerarray] = React.useState([]);
     const [Answerarray, setAnswerarray] = React.useState([]);
     const [Comment, setComment] = React.useState('');
+    const [Anscomment, setAnscomment] = React.useState('');
     const [Answer, setAnswer] = React.useState('');
     useEffect(() => {
         Axios.get(`http://localhost:5000/getcomment?id=${props.id}`)
@@ -33,6 +36,7 @@ export default function Questionlist(props) {
                 setAnswerarray(res.data.data);
                 // console.log(Answerarray);
             })
+
     }, [])
     // const [Answer, setAnswer] = React.useState([]);
     // const [Comment, setComment] = React.useState([]);
@@ -62,11 +66,23 @@ export default function Questionlist(props) {
         setAns(!Ans);
         console.log(Answerarray)
     }
+    const commentans = (id) => {
+        Axios.get(`http://localhost:5000/getcommentanswer?id=${id}`)
+            .then(res => {
+                console.log(res.data.data);
+                setCommentanswerarray(res.data.data);
+                // console.log(Commentarray);
+            })
+        setComans(!Comans);
+    }
     const handleAchange = (event) => {
         setAnswer(event.target.value);
     }
     const handleCchange = (event) => {
         setComment(event.target.value);
+    }
+    const handleACchange = (event) => {
+        setAnscomment(event.target.value);
     }
     const commentstore = (id) => {
         setCom(!Com);
@@ -112,6 +128,24 @@ export default function Questionlist(props) {
                 console.log(res);
             })
     }
+
+    const commentstoreans = (id, answerid) => {
+        const userData = JSON.parse(sessionStorage.getItem('userData'));
+        // const userdetails = jwtDecode(userData.data.token);
+        console.log(userData.data.id, Anscomment, answerid);
+        Axios.post(`http://localhost:5000/storeanscomment`, { userid: userData.data.id, comment: Anscomment, answerid: answerid })
+            .then(res => {
+                console.log(res)
+            })
+        Axios.get(`http://localhost:5000/getcommentanswer?id=${id}`)
+            .then(res => {
+                console.log(res.data.data);
+                setCommentanswerarray(res.data.data);
+                // console.log(Commentarray);
+            })
+
+
+    }
     const upvoteans = (data, id) => {
         upvote2 = data + 1;
         Axios.post('http://localhost:5000/upvoteans', { upvote: data + 1, id: id })
@@ -132,7 +166,7 @@ export default function Questionlist(props) {
                     <div className="questionset" >
                         <label>Description:</label> <textarea style={{ height: "84px", width: "630px", border: "none", overflow: "auto" }} name="questiondesc" selectTextOnFocus={false} editable={false} cols="50" rows="5" value={props.desc} ></textarea>
                     </div>
-                    <div>
+                    <div >
                         {/* disabled={this.state.disabledup} */}
                         <Button onClick={e => upvoteques(upvote1)} className="upvotesize" disabled={Upvoteques} variant="contained" color="primary">{Upvoteques ? upvote1 + 1 : upvote1}<ExpandLessIcon></ExpandLessIcon></Button>
                         <Button onClick={e => commentdis()} className="upvotesize" variant="contained" color="primary">{props.comment}<CommentIcon /></Button>
@@ -164,19 +198,54 @@ export default function Questionlist(props) {
             {Ans ?
                 <div>
                     <div className="questionset">
-                        <label> Answers:</label>
+
                         <div>
                             {Answerarray.map((data) => (
-                                <div className="answerdisplay"><label>id:{data.user_id}</label>
-                                    <textarea style={{ height: "31px", width: "630px", border: "none" }} name="commenthead" selectTextOnFocus={false} editable={false} cols="50" rows="5" value={data.answer}></textarea>
-                                    {upvoteans ? <Button onClick={e => upvoteans(data.answer_id, data.upvote)} className="upvotesize" disabled={Upvoteans} variant="contained" color="primary">{data.upvote} < ExpandLessIcon ></ExpandLessIcon>
-                                    </Button> :
-                                        <Button className="upvotesize" disabled={Upvoteans} variant="contained" color="primary">{upvote2}< ExpandLessIcon ></ExpandLessIcon></Button>}
+                                <div>
+                                    <div className="questionset">
+                                        <label> Answers:</label>
+                                        <label>id:{data.user_id}</label>
+                                        <textarea style={{ height: "31px", width: "630px", border: "none" }} name="commenthead" selectTextOnFocus={false} editable={false} cols="20" rows="5" value={data.answer}></textarea>
+                                    </div>
+                                    <Divider variant="middle" />
+                                    <div>
+                                        {upvoteans ?
+                                            <div>
+                                                < Button onClick={e => upvoteans(data.answer_id, data.upvote)} className="upvotesize" disabled={Upvoteans} variant="contained" color="primary">{data.upvote}
+                                                    <ExpandLessIcon></ExpandLessIcon></Button>
+                                                <Button onClick={e => commentans(data.answer_id)} className="upvotesize" variant="contained" color="primary"><CommentIcon /></Button></div>
+                                            :
+                                            <div>
+                                                <Button className="upvotesize" disabled={Upvoteans} variant="contained" color="primary">{upvote2}< ExpandLessIcon ></ExpandLessIcon></Button>
+                                                <Button onClick={e => commentans(data.answer_id)} className="upvotesize" variant="contained" color="primary"><CommentIcon /></Button>
+                                            </div>}
+                                    </div>
+                                    {Comans ? <div>
+                                        <div className="questionset">
+                                            <label> Comments:</label>
+                                            <div>
+                                                {Commentanswerarray.map((data) => (
+                                                    <div className="answerdisplay">
+                                                        <label>id:{data.userid}</label>
+                                                        <textarea style={{ height: "31px", width: "630px", border: "none" }} name="commenthead" selectTextOnFocus={false} editable={false} cols="50" rows="5" value={data.comment}></textarea>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <Divider variant="middle" />
+                                        </div>
+                                        <div className="questionset">
+                                            <label> Answer Comment:</label>
+                                            <textarea style={{ height: "31px", width: "630px", border: "none" }} name="questionhead" placeholder="Enter your Comment" cols="50" rows="5" value={Anscomment} onChange={e => handleACchange(e)}></textarea>
+                                        </div>
+
+                                        <Button onClick={e => commentstoreans(data.userid, data.answer_id)} className="upvotesize" variant="contained" color="secondary">submit</Button>
+                                        <Button onClick={e => commentdis()} className="upvotesize" variant="contained" color="secondary">close</Button>
+                                    </div> : <></>}
 
                                 </div>
                             ))}
-                        </div>
-                    </div>
+                        </div >
+                    </div >
                     <Divider variant="middle" />
                     <div className="questionset">
                         <label> Answer:</label>
@@ -186,7 +255,7 @@ export default function Questionlist(props) {
                     <Button onClick={e => answerstore(props.id)} className="upvotesize" variant="contained" color="secondary">submit</Button>
                     <Button onClick={e => answerdis()} className="upvotesize" variant="contained" color="secondary">close</Button>
 
-                </div> : <></>
+                </div > : <></>
             }
         </div >)
 }

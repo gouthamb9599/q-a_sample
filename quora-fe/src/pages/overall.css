@@ -18,6 +18,12 @@
   
 .answerdisplay{
     display: inline-flex;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 31px;
+}
+.answerset{
+  box-sizing: border-box;
 }
   .form-alignments{
     height: 15px;
@@ -55,8 +61,8 @@
     z-index: 1000;
     position: fixed;
     background-color: silver;
-    top: 180px;
-    right: 250px;
+    top: 138px;
+    right: 871px;
     margin-left: 185px;
       box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
       transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
@@ -80,6 +86,10 @@
   .questionset{
       padding: 10px 10px;
       display: flex;
+  }
+  .search{
+    display: flex;
+    margin-bottom: 15px;
   }
   .questionhead{
     margin-top: 0px;

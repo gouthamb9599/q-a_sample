@@ -199,6 +199,39 @@ const route = app => {
             }
         })
     })
+    app.get('/getcommentanswer', (req, res) => {
+        const id = req.query.id;
+        client.query(`select * from answer_comments where answer_id=${id}`, (err, results) => {
+            if (err) console.log(err);
+            else {
+                if (results.rowCount !== 0) {
+                    console.log(results.rows);
+                    res.send({ success: true, data: results.rows })
+                }
+            }
+        }
+        )
+    })
+    app.post('/storeanscomment', (req, res) => {
+        const data = req.body;
+        client.query(`insert into  answer_comments(comment,answer_id,userid) values($1,$2,$3) RETURNING *`, [data.comment, data.answerid, data.userid],
+            (err, results) => {
+                if (err) console.log(err);
+                else {
+                    if (results.rowCount !== 0) {
+                        res.send({ success: true })
+                        client.query(`select count(*) from answers_comments where answer_id=${data.answerid} `,
+                            (err, result) => {
+                                if (err) console.log(err);
+                                else {
+                                    console.log(result.rows[0].count)
+                                    client.query(`update answer set answercommentcount=${result.rows[0].count} where answer_id=${data.answerid}`)
+                                }
+                            })
+                    }
+                }
+            })
+    })
     app.post('/upvoteans', (req, res) => {
         const upvote = req.body.upvote;
         const id = req.body.id
